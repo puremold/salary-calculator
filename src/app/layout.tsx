@@ -20,6 +20,7 @@ export const metadata: Metadata = {
     "2025 연봉 실수령액",
   ],
   alternates: { canonical: "/" },
+  verification: { google: "75RAQW4vbtb36KCLTHYJYKMHibOyvsWyhrUpXEMDmbo" },
   openGraph: {
     type: "website",
     locale: "ko_KR",
