@@ -50,9 +50,12 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <section className="text-center">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-          연봉 실수령액 계산기 2025
+      <section className="rounded-2xl bg-gradient-to-b from-indigo-50 to-slate-50 px-6 py-8 text-center ring-1 ring-indigo-100">
+        <span className="inline-block rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700">
+          2025년 기준 · 4대보험 자동 반영
+        </span>
+        <h1 className="mt-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+          연봉 실수령액 계산기
         </h1>
         <p className="mt-2 text-slate-600">
           연봉만 입력하면 4대보험·세금을 뺀 <strong>월 실수령액</strong>을 바로 계산해 드립니다.
@@ -60,6 +63,19 @@ export default function HomePage() {
       </section>
 
       <SalaryCalculator />
+
+      <Link
+        href="/sigeup"
+        className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-5 py-4 transition hover:border-indigo-400 hover:shadow-sm"
+      >
+        <div>
+          <div className="font-bold text-slate-900">시급 계산기 →</div>
+          <div className="mt-0.5 text-sm text-slate-500">
+            시급으로 주휴수당 포함 월급·실수령액 계산하기
+          </div>
+        </div>
+        <span className="text-2xl">⏱️</span>
+      </Link>
 
       <section>
         <h2 className="mb-3 text-lg font-bold text-slate-900">인기 연봉 실수령액</h2>
