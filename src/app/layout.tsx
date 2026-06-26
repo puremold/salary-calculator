@@ -35,7 +35,8 @@ export const metadata: Metadata = {
 
 const NAV = [
   { href: "/", label: "연봉 실수령액" },
-  { href: "/sigeup", label: "시급 계산기" },
+  { href: "/sigeup", label: "시급" },
+  { href: "/toejikgeum", label: "퇴직금" },
 ];
 
 function LogoMark() {

@@ -64,18 +64,32 @@ export default function HomePage() {
 
       <SalaryCalculator />
 
-      <Link
-        href="/sigeup"
-        className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-5 py-4 transition hover:border-indigo-400 hover:shadow-sm"
-      >
-        <div>
-          <div className="font-bold text-slate-900">시급 계산기 →</div>
-          <div className="mt-0.5 text-sm text-slate-500">
-            시급으로 주휴수당 포함 월급·실수령액 계산하기
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Link
+          href="/sigeup"
+          className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-5 py-4 transition hover:border-indigo-400 hover:shadow-sm"
+        >
+          <div>
+            <div className="font-bold text-slate-900">시급 계산기 →</div>
+            <div className="mt-0.5 text-sm text-slate-500">
+              주휴수당 포함 월급·실수령액
+            </div>
           </div>
-        </div>
-        <span className="text-2xl">⏱️</span>
-      </Link>
+          <span className="text-2xl">⏱️</span>
+        </Link>
+        <Link
+          href="/toejikgeum"
+          className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-5 py-4 transition hover:border-indigo-400 hover:shadow-sm"
+        >
+          <div>
+            <div className="font-bold text-slate-900">퇴직금 계산기 →</div>
+            <div className="mt-0.5 text-sm text-slate-500">
+              월급·근속기간으로 퇴직금 계산
+            </div>
+          </div>
+          <span className="text-2xl">💰</span>
+        </Link>
+      </div>
 
       <section>
         <h2 className="mb-3 text-lg font-bold text-slate-900">인기 연봉 실수령액</h2>
