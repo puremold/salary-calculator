@@ -7,16 +7,24 @@ import { formatKRW } from "@/lib/salary";
 import { MAX_WAGE, MIN_WAGE } from "@/lib/hourlyData";
 import { BreakdownTable } from "./BreakdownTable";
 
+// 빈 칸 허용: 비우면 ""로 두고 계산 시 0으로 취급
+type Num = number | "";
+const n = (v: Num) => (v === "" ? 0 : v);
+const parse = (s: string): Num => (s === "" ? "" : Number(s));
+
 export function HourlyCalculator({ initialWage = 10030 }: { initialWage?: number }) {
-  const [wage, setWage] = useState(initialWage);
-  const [weeklyHours, setWeeklyHours] = useState(40);
+  const [wage, setWage] = useState<Num>(initialWage);
+  const [weeklyHours, setWeeklyHours] = useState<Num>(40);
 
   const r = useMemo(
-    () => computeHourly(wage, { weeklyHours }),
+    () => computeHourly(n(wage), { weeklyHours: n(weeklyHours) }),
     [wage, weeklyHours],
   );
 
-  const clamped = Math.min(Math.max(wage, MIN_WAGE), MAX_WAGE);
+  const clamped = Math.min(Math.max(n(wage), MIN_WAGE), MAX_WAGE);
+
+  const inputCls =
+    "mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-lg tabular-nums text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200";
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
@@ -27,11 +35,12 @@ export function HourlyCalculator({ initialWage = 10030 }: { initialWage?: number
             type="number"
             inputMode="numeric"
             value={wage}
+            placeholder="0"
             min={MIN_WAGE}
             max={MAX_WAGE}
             step={100}
-            onChange={(e) => setWage(Number(e.target.value) || 0)}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-lg font-semibold tabular-nums text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+            onChange={(e) => setWage(parse(e.target.value))}
+            className={inputCls + " font-semibold"}
           />
         </label>
         <label className="block">
@@ -40,13 +49,12 @@ export function HourlyCalculator({ initialWage = 10030 }: { initialWage?: number
             type="number"
             inputMode="numeric"
             value={weeklyHours}
+            placeholder="40"
             min={1}
             max={68}
             step={1}
-            onChange={(e) =>
-              setWeeklyHours(Math.max(1, Number(e.target.value) || 1))
-            }
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-lg tabular-nums text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+            onChange={(e) => setWeeklyHours(parse(e.target.value))}
+            className={inputCls}
           />
           <span className="mt-1 block text-xs text-slate-400">
             주 15시간 이상이면 주휴수당이 포함됩니다 (풀타임 40시간 = 월 약 209시간)

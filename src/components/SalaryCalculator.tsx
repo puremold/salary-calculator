@@ -11,21 +11,29 @@ import {
 import { MAX_MANWON, MIN_MANWON } from "@/lib/salaryData";
 import { BreakdownTable } from "./BreakdownTable";
 
+// 빈 칸 허용: 비우면 ""로 두고 계산 시 0으로 취급
+type Num = number | "";
+const n = (v: Num) => (v === "" ? 0 : v);
+const parse = (s: string): Num => (s === "" ? "" : Number(s));
+
 export function SalaryCalculator({ initialManwon = 3600 }: { initialManwon?: number }) {
-  const [manwon, setManwon] = useState(initialManwon);
-  const [dependents, setDependents] = useState(1);
-  const [mealAllowance, setMealAllowance] = useState(0); // 월 비과세(식대 등)
+  const [manwon, setManwon] = useState<Num>(initialManwon);
+  const [dependents, setDependents] = useState<Num>(1);
+  const [mealAllowance, setMealAllowance] = useState<Num>(0); // 월 비과세(식대 등)
 
   const breakdown = useMemo(
     () =>
-      computeSalary(manwonToWon(manwon), {
-        dependents,
-        nonTaxableMonthly: mealAllowance,
+      computeSalary(manwonToWon(n(manwon)), {
+        dependents: n(dependents),
+        nonTaxableMonthly: n(mealAllowance),
       }),
     [manwon, dependents, mealAllowance],
   );
 
-  const clamped = Math.min(Math.max(manwon, MIN_MANWON), MAX_MANWON);
+  const clamped = Math.min(Math.max(n(manwon), MIN_MANWON), MAX_MANWON);
+
+  const inputCls =
+    "mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-lg tabular-nums text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200";
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
@@ -36,11 +44,12 @@ export function SalaryCalculator({ initialManwon = 3600 }: { initialManwon?: num
             type="number"
             inputMode="numeric"
             value={manwon}
+            placeholder="0"
             min={MIN_MANWON}
             max={MAX_MANWON}
             step={100}
-            onChange={(e) => setManwon(Number(e.target.value) || 0)}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-lg font-semibold tabular-nums text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+            onChange={(e) => setManwon(parse(e.target.value))}
+            className={inputCls + " text-lg font-semibold"}
           />
         </label>
         <label className="block">
@@ -49,11 +58,12 @@ export function SalaryCalculator({ initialManwon = 3600 }: { initialManwon?: num
             type="number"
             inputMode="numeric"
             value={dependents}
+            placeholder="1"
             min={1}
             max={11}
             step={1}
-            onChange={(e) => setDependents(Math.max(1, Number(e.target.value) || 1))}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-lg tabular-nums text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+            onChange={(e) => setDependents(parse(e.target.value))}
+            className={inputCls}
           />
         </label>
         <label className="block">
@@ -62,10 +72,11 @@ export function SalaryCalculator({ initialManwon = 3600 }: { initialManwon?: num
             type="number"
             inputMode="numeric"
             value={mealAllowance}
+            placeholder="0"
             min={0}
             step={10000}
-            onChange={(e) => setMealAllowance(Math.max(0, Number(e.target.value) || 0))}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-lg tabular-nums text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+            onChange={(e) => setMealAllowance(parse(e.target.value))}
+            className={inputCls}
           />
         </label>
       </div>

@@ -6,32 +6,40 @@ import { computeSeverance } from "@/lib/severance";
 import { formatKRW } from "@/lib/salary";
 import { MAX_MONTHLY_MANWON, MIN_MONTHLY_MANWON } from "@/lib/severanceData";
 
+// 빈 칸 허용용 타입/헬퍼: 비우면 ""로 두고, 계산할 땐 0으로 취급
+type Num = number | "";
+const n = (v: Num) => (v === "" ? 0 : v);
+const parse = (s: string): Num => (s === "" ? "" : Number(s));
+
 export function SeveranceCalculator({
   initialMonthlyManwon = 300,
 }: {
   initialMonthlyManwon?: number;
 }) {
-  const [monthly, setMonthly] = useState(initialMonthlyManwon); // 월급(만원)
-  const [bonus, setBonus] = useState(0); // 연간 상여(만원)
-  const [leave, setLeave] = useState(0); // 연차수당(만원)
-  const [years, setYears] = useState(3);
-  const [months, setMonths] = useState(0);
-  const [days, setDays] = useState(0);
+  const [monthly, setMonthly] = useState<Num>(initialMonthlyManwon); // 월급(만원)
+  const [bonus, setBonus] = useState<Num>(0); // 연간 상여(만원)
+  const [leave, setLeave] = useState<Num>(0); // 연차수당(만원)
+  const [years, setYears] = useState<Num>(3);
+  const [months, setMonths] = useState<Num>(0);
+  const [days, setDays] = useState<Num>(0);
 
   const r = useMemo(
     () =>
       computeSeverance({
-        monthlyWage: monthly * 10000,
-        annualBonus: bonus * 10000,
-        annualLeaveAllowance: leave * 10000,
-        serviceYears: years,
-        serviceMonths: months,
-        serviceDays: days,
+        monthlyWage: n(monthly) * 10000,
+        annualBonus: n(bonus) * 10000,
+        annualLeaveAllowance: n(leave) * 10000,
+        serviceYears: n(years),
+        serviceMonths: n(months),
+        serviceDays: n(days),
       }),
     [monthly, bonus, leave, years, months, days],
   );
 
-  const clamped = Math.min(Math.max(monthly, MIN_MONTHLY_MANWON), MAX_MONTHLY_MANWON);
+  const clamped = Math.min(
+    Math.max(n(monthly), MIN_MONTHLY_MANWON),
+    MAX_MONTHLY_MANWON,
+  );
 
   const inputCls =
     "mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-lg tabular-nums text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200";
@@ -45,10 +53,11 @@ export function SeveranceCalculator({
             type="number"
             inputMode="numeric"
             value={monthly}
+            placeholder="0"
             min={MIN_MONTHLY_MANWON}
             max={MAX_MONTHLY_MANWON}
             step={10}
-            onChange={(e) => setMonthly(Number(e.target.value) || 0)}
+            onChange={(e) => setMonthly(parse(e.target.value))}
             className={inputCls + " font-semibold"}
           />
         </label>
@@ -58,9 +67,10 @@ export function SeveranceCalculator({
             type="number"
             inputMode="numeric"
             value={bonus}
+            placeholder="0"
             min={0}
             step={10}
-            onChange={(e) => setBonus(Math.max(0, Number(e.target.value) || 0))}
+            onChange={(e) => setBonus(parse(e.target.value))}
             className={inputCls}
           />
         </label>
@@ -70,9 +80,10 @@ export function SeveranceCalculator({
             type="number"
             inputMode="numeric"
             value={leave}
+            placeholder="0"
             min={0}
             step={10}
-            onChange={(e) => setLeave(Math.max(0, Number(e.target.value) || 0))}
+            onChange={(e) => setLeave(parse(e.target.value))}
             className={inputCls}
           />
         </label>
@@ -86,10 +97,11 @@ export function SeveranceCalculator({
               type="number"
               inputMode="numeric"
               value={years}
+              placeholder="0"
               min={0}
               max={50}
               step={1}
-              onChange={(e) => setYears(Math.max(0, Number(e.target.value) || 0))}
+              onChange={(e) => setYears(parse(e.target.value))}
               className={inputCls}
             />
             <span className="mt-1 block text-center text-xs text-slate-400">년</span>
@@ -99,10 +111,11 @@ export function SeveranceCalculator({
               type="number"
               inputMode="numeric"
               value={months}
+              placeholder="0"
               min={0}
               max={11}
               step={1}
-              onChange={(e) => setMonths(Math.max(0, Number(e.target.value) || 0))}
+              onChange={(e) => setMonths(parse(e.target.value))}
               className={inputCls}
             />
             <span className="mt-1 block text-center text-xs text-slate-400">개월</span>
@@ -112,10 +125,11 @@ export function SeveranceCalculator({
               type="number"
               inputMode="numeric"
               value={days}
+              placeholder="0"
               min={0}
               max={30}
               step={1}
-              onChange={(e) => setDays(Math.max(0, Number(e.target.value) || 0))}
+              onChange={(e) => setDays(parse(e.target.value))}
               className={inputCls}
             />
             <span className="mt-1 block text-center text-xs text-slate-400">일</span>
